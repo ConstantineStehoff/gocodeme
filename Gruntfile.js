@@ -5,6 +5,12 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        concat: {
+            js: {
+                src:    'script/*.js',
+                dist:   'dist/scripts/main.js'
+            }
+        },
         jshint: {
 
             options: {
@@ -12,7 +18,7 @@ module.exports = function(grunt) {
                 ignores:['app/bower_components/**/*.js', 'app/lib/**/*.js']
             },
             all: {
-                src:['Gruntfile.js', 'server.js', 'app/**/*.js']
+                src:['Gruntfile.js', 'app/**/*.js']
             }
         },
         watch: {
@@ -21,18 +27,18 @@ module.exports = function(grunt) {
                 tasks: ['sass']
             },
             js: {
-                files: ['Gruntfile.js', 'server.js', 'app/**/*.js'],
+                files: ['Gruntfile.js', 'scripts/*.js'],
                 tasks: ['jshint']
             }
         },
         sass: {
             dist: {
                 files: {
-                    'css/main.css': 'sass/main.scss'
+                    'dist/css/main.css': 'sass/main.scss'
                 }
             }
         }
     });
 
-    grunt.registerTask('default', ['sass', 'watch']);
+    grunt.registerTask('default', ['concat', 'sass', 'watch']);
 };
