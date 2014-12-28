@@ -2,14 +2,22 @@ module.exports = function(grunt) {
     'use strict';
 
     require('load-grunt-tasks')(grunt);
-
+    //require('grunt-contrib-concat')(grunt);
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
-            js: {
-                src:    'script/*.js',
-                dist:   'dist/scripts/main.js'
-            }
+          options: {
+            // define a string to put between each file in the concatenated output
+            separator: ';'
+          },
+          dist: {
+            // the files to concatenate
+            src: ['script/*.js'],
+            // the location of the resulting JS file
+            dest: 'dist/scripts/main.js'
+          }
         },
         jshint: {
 
@@ -18,7 +26,7 @@ module.exports = function(grunt) {
                 ignores:['app/bower_components/**/*.js', 'app/lib/**/*.js']
             },
             all: {
-                src:['Gruntfile.js', 'app/**/*.js']
+                src:['Gruntfile.js', 'scripts/*.js']
             }
         },
         watch: {
