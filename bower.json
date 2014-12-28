@@ -1,22 +1,20 @@
 {
-"name": "gocodeme",
-"version": "0.0.0",
-"authors": [
-"Konstantin Stekhov <cststehoff@gmail.com>"
-],
-"license": "MIT",
-"ignore": [
-"**/.*",
-"node_modules",
-"bower_components",
-"test",
-"tests"
-],
-"dependencies": {
-"angular-route": "~1.2.21",
-"bootstrap": "~3.2.0",
-"restangular": "~1.4.0",
-"angularjs": "~1.2.21",
-"angular-local-storage": "~0.0.7"
-}
+	"name": "gocodeme",
+	"version": "0.0.0",
+	"authors": ["Konstantin Stekhov <cststehoff@gmail.com>"],
+	"license": "MIT",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests"
+	],
+	"dependencies": {
+		"angular-route": "~1.2.21",
+		"bootstrap-sass": "~3.0.2",
+		"restangular": "~1.4.0",
+		"angularjs": "~1.2.21",
+		"angular-local-storage": "~0.0.7"
+	}
 } 

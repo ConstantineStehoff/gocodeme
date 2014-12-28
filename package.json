@@ -19,6 +19,7 @@
     "grunt-contrib-sass": "^0.7.3",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-contrib-concat": "^0.4.0",
+    "grunt-bower-concat": "*",
     "load-grunt-tasks": "^0.6.0"
   }
 }

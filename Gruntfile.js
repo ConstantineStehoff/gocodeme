@@ -4,7 +4,8 @@ module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt);
     //require('grunt-contrib-concat')(grunt);
     grunt.loadNpmTasks('grunt-contrib-concat');
-    
+    grunt.loadNpmTasks('grunt-bower-concat');
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
@@ -14,10 +15,22 @@ module.exports = function(grunt) {
           },
           dist: {
             // the files to concatenate
-            src: ['script/*.js'],
+            src: ['scripts/*.js', 'scripts/controllers/*.js'],
             // the location of the resulting JS file
             dest: 'dist/scripts/main.js'
           }
+        },
+        bower_concat:{
+            all: {
+                dest: 'scripts/_bower.js',
+                //cssDest: 'sass/_bower.scss',
+                include: [
+                    'angularjs'
+                ],
+                bowerOptions:{
+                    relative: false
+                }
+            }
         },
         jshint: {
 
@@ -48,5 +61,5 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['concat', 'sass', 'watch']);
+    grunt.registerTask('default', ['bower_concat', 'concat', 'sass', 'watch']);
 };
