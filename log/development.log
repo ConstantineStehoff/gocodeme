@@ -1,0 +1,1657 @@
+  [1m[36m (22.8ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL) [0m
+  [1m[35m (0.7ms)[0m  select sqlite_version(*)
+  [1m[36m (2.8ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to CreateCms (20150102060014)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.8ms)[0m  CREATE TABLE "comfy_cms_sites" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "label" varchar NOT NULL, "identifier" varchar NOT NULL, "hostname" varchar NOT NULL, "path" varchar, "locale" varchar DEFAULT 'en' NOT NULL, "is_mirrored" boolean DEFAULT 'f' NOT NULL) 
+  [1m[36m (0.2ms)[0m  [1mCREATE  INDEX "index_comfy_cms_sites_on_hostname" ON "comfy_cms_sites" ("hostname")[0m
+  [1m[35m (0.2ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_sites_on_hostname' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_sites_on_hostname' AND type='index'
+
+  [1m[36m (0.2ms)[0m  [1mCREATE  INDEX "index_comfy_cms_sites_on_is_mirrored" ON "comfy_cms_sites" ("is_mirrored")[0m
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in up at /Users/konstantin/RubymineProjects/gocodeme/db/migrate/20150102060014_create_cms.rb:36)
+  [1m[35m (0.4ms)[0m  CREATE TABLE "comfy_cms_layouts" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "site_id" integer NOT NULL, "parent_id" integer, "app_layout" varchar, "label" varchar NOT NULL, "identifier" varchar NOT NULL, "content" text(16777215), "css" text(16777215), "js" text(16777215), "position" integer DEFAULT 0 NOT NULL, "is_shared" boolean DEFAULT 'f' NOT NULL, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE  INDEX "index_comfy_cms_layouts_on_parent_id_and_position" ON "comfy_cms_layouts" ("parent_id", "position")[0m
+  [1m[35m (0.2ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_layouts_on_parent_id_and_position' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_layouts_on_parent_id_and_position' AND type='index'
+
+  [1m[36m (36.7ms)[0m  [1mCREATE UNIQUE INDEX "index_comfy_cms_layouts_on_site_id_and_identifier" ON "comfy_cms_layouts" ("site_id", "identifier")[0m
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in up at /Users/konstantin/RubymineProjects/gocodeme/db/migrate/20150102060014_create_cms.rb:55)
+  [1m[35m (0.2ms)[0m  CREATE TABLE "comfy_cms_pages" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "site_id" integer NOT NULL, "layout_id" integer, "parent_id" integer, "target_page_id" integer, "label" varchar NOT NULL, "slug" varchar, "full_path" varchar NOT NULL, "content_cache" text(16777215), "position" integer DEFAULT 0 NOT NULL, "children_count" integer DEFAULT 0 NOT NULL, "is_published" boolean DEFAULT 't' NOT NULL, "is_shared" boolean DEFAULT 'f' NOT NULL, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.1ms)[0m  [1mCREATE  INDEX "index_comfy_cms_pages_on_site_id_and_full_path" ON "comfy_cms_pages" ("site_id", "full_path")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_pages_on_site_id_and_full_path' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_pages_on_site_id_and_full_path' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1mCREATE  INDEX "index_comfy_cms_pages_on_parent_id_and_position" ON "comfy_cms_pages" ("parent_id", "position")[0m
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in up at /Users/konstantin/RubymineProjects/gocodeme/db/migrate/20150102060014_create_cms.rb:65)
+  [1m[35m (0.2ms)[0m  CREATE TABLE "comfy_cms_blocks" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "identifier" varchar NOT NULL, "content" text(16777215), "blockable_id" integer, "blockable_type" varchar, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.1ms)[0m  [1mCREATE  INDEX "index_comfy_cms_blocks_on_identifier" ON "comfy_cms_blocks" ("identifier")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_blocks_on_identifier' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_blocks_on_identifier' AND type='index'
+
+  [1m[36m (0.2ms)[0m  [1mCREATE  INDEX "index_comfy_cms_blocks_on_blockable_id_and_blockable_type" ON "comfy_cms_blocks" ("blockable_id", "blockable_type")[0m
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in up at /Users/konstantin/RubymineProjects/gocodeme/db/migrate/20150102060014_create_cms.rb:78)
+  [1m[35m (0.2ms)[0m  CREATE TABLE "comfy_cms_snippets" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "site_id" integer NOT NULL, "label" varchar NOT NULL, "identifier" varchar NOT NULL, "content" text(16777215), "position" integer DEFAULT 0 NOT NULL, "is_shared" boolean DEFAULT 'f' NOT NULL, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE UNIQUE INDEX "index_comfy_cms_snippets_on_site_id_and_identifier" ON "comfy_cms_snippets" ("site_id", "identifier")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_snippets_on_site_id_and_identifier' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_snippets_on_site_id_and_identifier' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1mCREATE  INDEX "index_comfy_cms_snippets_on_site_id_and_position" ON "comfy_cms_snippets" ("site_id", "position")[0m
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in up at /Users/konstantin/RubymineProjects/gocodeme/db/migrate/20150102060014_create_cms.rb:93)
+  [1m[35m (0.2ms)[0m  CREATE TABLE "comfy_cms_files" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "site_id" integer NOT NULL, "block_id" integer, "label" varchar NOT NULL, "file_file_name" varchar NOT NULL, "file_content_type" varchar NOT NULL, "file_file_size" integer NOT NULL, "description" varchar(2048), "position" integer DEFAULT 0 NOT NULL, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE  INDEX "index_comfy_cms_files_on_site_id_and_label" ON "comfy_cms_files" ("site_id", "label")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_label' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_label' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1mCREATE  INDEX "index_comfy_cms_files_on_site_id_and_file_file_name" ON "comfy_cms_files" ("site_id", "file_file_name")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_file_file_name' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_file_file_name' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_label' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_label' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  CREATE  INDEX "index_comfy_cms_files_on_site_id_and_position" ON "comfy_cms_files" ("site_id", "position")
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_position' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_position' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_file_file_name' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_file_file_name' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_label' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_label' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  CREATE  INDEX "index_comfy_cms_files_on_site_id_and_block_id" ON "comfy_cms_files" ("site_id", "block_id")
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "comfy_cms_revisions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "record_type" varchar NOT NULL, "record_id" integer NOT NULL, "data" text(16777215), "created_at" datetime) [0m
+  [1m[35m (0.3ms)[0m  CREATE  INDEX "index_cms_revisions_on_rtype_and_rid_and_created_at" ON "comfy_cms_revisions" ("record_type", "record_id", "created_at")
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "comfy_cms_categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "site_id" integer NOT NULL, "label" varchar NOT NULL, "categorized_type" varchar NOT NULL) [0m
+  [1m[35m (0.2ms)[0m  CREATE UNIQUE INDEX "index_cms_categories_on_site_id_and_cat_type_and_label" ON "comfy_cms_categories" ("site_id", "categorized_type", "label")
+  [1m[36m (0.1ms)[0m  [1mCREATE TABLE "comfy_cms_categorizations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "category_id" integer NOT NULL, "categorized_type" varchar NOT NULL, "categorized_id" integer NOT NULL) [0m
+  [1m[35m (0.2ms)[0m  CREATE UNIQUE INDEX "index_cms_categorizations_on_cat_id_and_catd_type_and_catd_id" ON "comfy_cms_categorizations" ("category_id", "categorized_type", "categorized_id")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20150102060014"]]
+  [1m[35m (4.4ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_blocks_on_blockable_id_and_blockable_type' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_blocks_on_blockable_id_and_blockable_type' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_blocks_on_identifier' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_blocks_on_identifier' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_cms_categories_on_site_id_and_cat_type_and_label' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_cms_categories_on_site_id_and_cat_type_and_label' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_cms_categorizations_on_cat_id_and_catd_type_and_catd_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_cms_categorizations_on_cat_id_and_catd_type_and_catd_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_block_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_block_id' AND type='index'
+
+  [1m[36m (0.2ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_position' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_position' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_file_file_name' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_file_file_name' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_label' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_files_on_site_id_and_label' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_layouts_on_site_id_and_identifier' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_layouts_on_site_id_and_identifier' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_layouts_on_parent_id_and_position' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_layouts_on_parent_id_and_position' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_pages_on_parent_id_and_position' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_pages_on_parent_id_and_position' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_pages_on_site_id_and_full_path' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_pages_on_site_id_and_full_path' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_cms_revisions_on_rtype_and_rid_and_created_at' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_cms_revisions_on_rtype_and_rid_and_created_at' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_sites_on_is_mirrored' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_sites_on_is_mirrored' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_sites_on_hostname' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_sites_on_hostname' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_snippets_on_site_id_and_position' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_snippets_on_site_id_and_position' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comfy_cms_snippets_on_site_id_and_identifier' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comfy_cms_snippets_on_site_id_and_identifier' AND type='index'
+
+
+
+Started GET "/" for ::1 at 2015-01-01 23:23:44 -0800
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by Comfy::Cms::ContentController#show as HTML
+  [1m[35m (18.8ms)[0m  SELECT COUNT(*) FROM "comfy_cms_sites"
+  [1m[36mComfy::Cms::Site Load (0.9ms)[0m  [1mSELECT "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."hostname" = ?[0m  [["hostname", "localhost:3000"]]
+Completed 404 Not Found in 1382ms
+
+ActionController::RoutingError (Site Not Found):
+  comfortable_mexican_sofa (1.12.3) app/controllers/comfy/cms/base_controller.rb:26:in `load_cms_site'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:427:in `block in make_lambda'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:163:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:163:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:92:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:92:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_process_action_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/abstract_controller/callbacks.rb:19:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:31:in `block in process_action'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.0) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.0) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.0) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.0) lib/action_view/rendering.rb:30:in `process'
+  actionpack (4.2.0) lib/action_controller/metal.rb:195:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal.rb:236:in `block in action'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `dispatch'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:42:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `each'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:802:in `call'
+  rack (1.6.0) lib/rack/etag.rb:24:in `call'
+  rack (1.6.0) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.0) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:647:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_trace.html.erb (2.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/routes/_route.html.erb (4.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/routes/_table.html.erb (29.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_request_and_response.html.erb (0.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_web_console.html.erb (1.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/routing_error.html.erb within rescues/layout (129.6ms)
+
+
+Started GET "/" for ::1 at 2015-01-01 23:25:00 -0800
+Processing by Comfy::Cms::ContentController#show as HTML
+  [1m[35m (1.2ms)[0m  SELECT COUNT(*) FROM "comfy_cms_sites"
+  [1m[36mComfy::Cms::Site Load (0.3ms)[0m  [1mSELECT "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."hostname" = ?[0m  [["hostname", "localhost:3000"]]
+Completed 404 Not Found in 25ms
+
+ActionController::RoutingError (Site Not Found):
+  comfortable_mexican_sofa (1.12.3) app/controllers/comfy/cms/base_controller.rb:26:in `load_cms_site'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:427:in `block in make_lambda'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:163:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:163:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:92:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:92:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_process_action_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/abstract_controller/callbacks.rb:19:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:31:in `block in process_action'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.0) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.0) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.0) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.0) lib/action_view/rendering.rb:30:in `process'
+  actionpack (4.2.0) lib/action_controller/metal.rb:195:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal.rb:236:in `block in action'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `dispatch'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:42:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `each'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:802:in `call'
+  rack (1.6.0) lib/rack/etag.rb:24:in `call'
+  rack (1.6.0) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.0) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:647:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_trace.html.erb (3.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/routes/_route.html.erb (4.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/routes/_table.html.erb (2.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_request_and_response.html.erb (1.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_web_console.html.erb (1.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/routing_error.html.erb within rescues/layout (100.3ms)
+
+
+Started GET "/admin" for ::1 at 2015-01-01 23:25:10 -0800
+Processing by Comfy::Admin::Cms::BaseController#jump as HTML
+  [1m[35mComfy::Cms::Site Load (11.3ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" IS NULL LIMIT 1
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites"  ORDER BY "comfy_cms_sites"."id" ASC LIMIT 1[0m
+Redirected to http://localhost:3000/admin/sites/new
+Completed 302 Found in 573ms (ActiveRecord: 11.9ms)
+
+
+Started GET "/admin/sites/new" for ::1 at 2015-01-01 23:25:11 -0800
+Processing by Comfy::Admin::Cms::SitesController#new as HTML
+Filter chain halted as :authenticate rendered or redirected
+Completed 401 Unauthorized in 2ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/admin/sites/new" for ::1 at 2015-01-01 23:25:40 -0800
+Processing by Comfy::Admin::Cms::SitesController#new as HTML
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_site_form_before.html.haml (3.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_site_form_after.html.haml (23.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_form.html.haml (321.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/new.html.haml within layouts/comfy/admin/cms (343.1ms)
+DEPRECATION WARNING: Extra .css in SASS file is unnecessary. Rename /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/bootstrap_overrides.css.sass to /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/bootstrap_overrides.sass. (called from realtime at /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/benchmark.rb:294)
+DEPRECATION WARNING: Extra .css in SASS file is unnecessary. Rename /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/codemirror_overrides.css.sass to /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/codemirror_overrides.sass. (called from realtime at /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/benchmark.rb:294)
+DEPRECATION WARNING: Extra .css in SASS file is unnecessary. Rename /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/base.css.sass to /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/base.sass. (called from realtime at /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/benchmark.rb:294)
+DEPRECATION WARNING: Extra .css in SASS file is unnecessary. Rename /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/bootstrap_overrides.css.sass to /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/bootstrap_overrides.sass. (called from realtime at /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/benchmark.rb:294)
+DEPRECATION WARNING: Extra .css in SASS file is unnecessary. Rename /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/codemirror_overrides.css.sass to /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/codemirror_overrides.sass. (called from realtime at /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/benchmark.rb:294)
+DEPRECATION WARNING: Extra .css in SASS file is unnecessary. Rename /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/base.css.sass to /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/assets/stylesheets/comfortable_mexican_sofa/base.sass. (called from realtime at /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/benchmark.rb:294)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (1.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (18174.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (3.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (1.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (1.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (1.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (18.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (2.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (1.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (10.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (2.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (1.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (1.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (5.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (67.8ms)
+Completed 200 OK in 18698ms (Views: 18689.2ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/comfortable_mexican_sofa/application-2423e9f51270f3e763efffa9e9dbe7a3.css?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/comfortable_mexican_sofa/admin/application-9efa5932588be04d849cf7fa2a51bf64.css?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/bootstrap/alert-f76ec816bdcc68a2282059928ef1e52d.js?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/jquery-eb3e278249152b5b5d5170b73d9dbf52.js?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/bootstrap/affix-d40f971ee2f767faaf6d6af09b6891b5.js?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/bootstrap/button-7404970dda5275bf4aa732d8ef1db223.js?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/bootstrap/carousel-c2724c63c7e679aa20278f2f022560cb.js?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/bootstrap/collapse-4e4d6ff4fc17afac1d72bdb87dcf9e03.js?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/bootstrap/dropdown-58cd9071a88158a9a95dda2320da8a92.js?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/bootstrap/transition-79362283457bd064d3b7ff06acb0f011.js?body=1" for ::1 at 2015-01-01 23:25:59 -0800
+
+
+Started GET "/assets/bootstrap/tab-7d45589786306b417d1664184ca8fbf8.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/bootstrap/scrollspy-f9ba5cb4717a71f39303d90f29813c97.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/bootstrap/tooltip-ad8aa40c8d62097d02080d81c3d49762.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/bootstrap/modal-98b3faca355a223ded5349bc93bdd4a7.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/bootstrap/popover-1fad9cb69620161b2a0c5c6ea67ae644.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/bootstrap-sprockets-81d188b7e8ff849b2ba0fb3c92f98b15.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery_ujs-0b8f09cf5aec4ba1be1abd9f915c77e2.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/core-290c80ecb8a0cc8abe3ce4c572428231.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/accordion-3d1f67a4a0baf1cc2a5a5f8501768dae.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/widget-320c0e6ab9d0ba9853aeac7cde601034.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/menu-8c8c1a32fbe50cf5561d90f9e9b35eee.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/position-a246667f9ce1d2f29e825269f137af38.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/autocomplete-9436c02ed773ba0fb7372a7bec950eb4.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/button-2beb8f828ae2bf5bd866a1d49a961e89.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/mouse-ff2fbf51cc09ac75e71dfc85cd384590.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/datepicker-46fef2bd08c7152eabb139e0fce7b289.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/draggable-9250c452292e1bd4057d39344ed9f6f2.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/resizable-4ceb16086b541dd8503b73ff1ebe634a.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/dialog-c1fa41ba5b29b08fcab3fe60e7172348.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/droppable-a5727f393ba5f7dfac24a98a212805ba.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-0282d580ee1beb2b2166773cd054c11e.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-drop-d3787a6c3f4db11ae0b877bdf7a85de3.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-clip-67797b4b592f7bc04599a3e12b872081.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-blind-aac47fe70b0387e1f4b8bfe0bf072285.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-bounce-064d63a752c1131bf6e64d778e0c5b3b.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-explode-38a867d7c3e41204408044da315a2a48.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-fade-caf346d3147ea3820fa5502d0bcc402e.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-fold-9e901395a03bb019676a750caf340127.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-highlight-f8f7fae176d54df1036b94389b5e0c53.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-size-fe918be45e13d9369491308f580cb72c.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-scale-23c81f9512f3fa3a0c7e444009be9486.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-puff-8175933e6f7f366217571ebe392bcf4d.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-pulsate-5d0c711613885bb84727e16dd4a47d2d.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-shake-30b93c9906ebe211aefb1927e2d7ce25.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-slide-b9e4c92bf19458648e4fd431c31cd9d6.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/effect-transfer-b9a9b5df16e7c3d96be346c4eff57c9f.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/progressbar-340f8cc635c00fb633bd6f13627ea342.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/selectable-d1e7c2b027660e6f99ef1c064d58ef38.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/selectmenu-a0709ccce7d4ae69ed082a88e61f3d6a.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/slider-e1eab19b7e4774caa77419c452062c47.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/sortable-fd3842e48545c56fbd507aee96bb367d.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/tabs-77d5968531a2f0c3e331c2b690c87826.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/spinner-e019a2f50967156b75fcf00f654fb2ce.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/jquery-ui/tooltip-bfb78785743ac78eaa554258aed56c70.js?body=1" for ::1 at 2015-01-01 23:26:00 -0800
+
+
+Started GET "/assets/tinymce/jquery.tinymce-b4272edf8e8393348e08cd98bef882d3.js?body=1" for ::1 at 2015-01-01 23:26:01 -0800
+
+
+Started GET "/assets/tinymce/tinymce.jquery-eefeaefbdada5ba195b280178ea22ce3.js?body=1" for ::1 at 2015-01-01 23:26:01 -0800
+
+
+Started GET "/assets/jquery-ui-37b935b85b811336738b5c41ecf8109d.js?body=1" for ::1 at 2015-01-01 23:26:01 -0800
+
+
+Started GET "/assets/tinymce-jquery-cffb4699095f08ed2080ce193d015a20.js?body=1" for ::1 at 2015-01-01 23:26:01 -0800
+
+
+Started GET "/assets/tinymce/preinit-f8893ca6ce2e77c8f6789a2ac0d68451.js?body=1" for ::1 at 2015-01-01 23:26:01 -0800
+
+
+Started GET "/assets/codemirror-94efbd6ff70d9d67ee6df7520b11c7c5.js?body=1" for ::1 at 2015-01-01 23:26:01 -0800
+
+
+Started GET "/assets/codemirror/modes/css-17a9e4ccd7701fb5b8956fbac399342e.js?body=1" for ::1 at 2015-01-01 23:26:01 -0800
+
+
+Started GET "/assets/codemirror/modes/htmlmixed-d4b36ab86e75cc8b0176a6aea9c5b097.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/codemirror/modes/javascript-58be2a36586c863d8ff3ccb58c4402ad.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/codemirror/modes/markdown-0ad046a6772d0ff50b4d3e21e990295c.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/codemirror/modes/xml-9c7cdd99c52ea6a2fa579e259e3e9dd4.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/codemirror/addons/edit/closetag-0736104c05789327d7524d784f8f8bd4.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/comfortable_mexican_sofa/lib/bootstrap-datetimepicker-b3ff0eae483619cd67502a5e4a45a1be.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/bootstrap-5efd6ecba3bbec6e39f6c485b7e6030e.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/comfortable_mexican_sofa/lib/diff/diff_match_patch.min-43496de198064061e009afb2bc25029b.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/comfortable_mexican_sofa/lib/diff/pretty_text_diff.min-a1d7adb4e2330ccf25139e1a9e6d3902.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/comfortable_mexican_sofa/lib/diff-18dd10f47d89cdce21b3711e0310e2bf.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/comfortable_mexican_sofa/cms/uploader-5a5e67edec20fa72a12d1bb16264bbbc.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/plupload.dev-d8db96d941b90abdd3411f3e15ad13f1.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/moxie-752f9680b1ebc04e62bc9bd3493da6f0.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/comfortable_mexican_sofa/cms/files-3f9034dcf9344f46186bab32d23f3cac.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/comfortable_mexican_sofa/application-a86adb741a185c1067be005dc3867a45.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started GET "/assets/comfortable_mexican_sofa/admin/application-a0066dbf4007b87ce9ca5698e47b6a8d.js?body=1" for ::1 at 2015-01-01 23:26:02 -0800
+
+
+Started POST "/admin/sites" for ::1 at 2015-01-01 23:27:05 -0800
+Processing by Comfy::Admin::Cms::SitesController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"CUGVTcaMMP/ubMqc/UPa0RXi1ovxTSV6ln0us5XA3JW3y3Bqy9Y6oxAQEy3EbNWz61ixtK3UY61SI9GvPQwOEA==", "site"=>{"label"=>"gocodeme", "identifier"=>"gocodeme", "hostname"=>"localhost", "path"=>"", "locale"=>"en", "is_mirrored"=>"0"}, "commit"=>"Create Site"}
+Filter chain halted as :authenticate rendered or redirected
+Completed 401 Unauthorized in 6ms (ActiveRecord: 0.0ms)
+
+
+Started POST "/admin/sites" for ::1 at 2015-01-01 23:27:05 -0800
+Processing by Comfy::Admin::Cms::SitesController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"CUGVTcaMMP/ubMqc/UPa0RXi1ovxTSV6ln0us5XA3JW3y3Bqy9Y6oxAQEy3EbNWz61ixtK3UY61SI9GvPQwOEA==", "site"=>{"label"=>"gocodeme", "identifier"=>"gocodeme", "hostname"=>"localhost", "path"=>"", "locale"=>"en", "is_mirrored"=>"0"}, "commit"=>"Create Site"}
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36mComfy::Cms::Site Exists (18.8ms)[0m  [1mSELECT  1 AS one FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."identifier" = 'gocodeme' LIMIT 1[0m
+  [1m[35mComfy::Cms::Site Exists (0.3ms)[0m  SELECT  1 AS one FROM "comfy_cms_sites" WHERE ("comfy_cms_sites"."hostname" = 'localhost' AND "comfy_cms_sites"."path" = '') LIMIT 1
+  [1m[36mSQL (67.9ms)[0m  [1mINSERT INTO "comfy_cms_sites" ("label", "identifier", "hostname", "path") VALUES (?, ?, ?, ?)[0m  [["label", "gocodeme"], ["identifier", "gocodeme"], ["hostname", "localhost"], ["path", ""]]
+  [1m[35m (49.3ms)[0m  commit transaction
+Redirected to http://localhost:3000/admin/sites/1/layouts
+Completed 302 Found in 216ms (ActiveRecord: 136.4ms)
+
+
+Started GET "/admin/sites/1/layouts" for ::1 at 2015-01-01 23:27:05 -0800
+Processing by Comfy::Admin::Cms::LayoutsController#index as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.2ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (31.1ms)[0m  SELECT COUNT(*) FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ?  [["site_id", 1]]
+Redirected to http://localhost:3000/admin/sites/1/layouts/new
+Completed 302 Found in 115ms (ActiveRecord: 31.6ms)
+
+
+Started GET "/admin/sites/1/layouts/new" for ::1 at 2015-01-01 23:27:05 -0800
+Processing by Comfy::Admin::Cms::LayoutsController#new as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComfy::Cms::Layout Load (12.8ms)[0m  SELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."id" IS NULL  ORDER BY comfy_cms_layouts.position LIMIT 1
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layout_form_before.html.haml (3.3ms)
+  [1m[36mComfy::Cms::Layout Load (0.8ms)[0m  [1mSELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position[0m  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layout_form_after.html.haml (1.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/_form.html.haml (23.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/new.html.haml within layouts/comfy/admin/cms (33.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (945.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (8.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (4.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (2.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (30.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (2.1ms)
+Completed 200 OK in 1138ms (Views: 1109.3ms | ActiveRecord: 13.8ms)
+
+
+Started GET "/assets/bootstrap/glyphicons-halflings-regular-195cb410b49d75c104a5bc6ad385ac77.woff" for ::1 at 2015-01-01 23:27:07 -0800
+
+
+Started POST "/admin/sites/1/layouts" for ::1 at 2015-01-01 23:27:46 -0800
+Processing by Comfy::Admin::Cms::LayoutsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"DgWpUowKaw8dmGTMw3CnxtTj66hxQP35Vler2bkJ3duwj0x1gVBhU+PkvX36X6ikKlmMly3Zuy6SCVTFEcUPXg==", "layout"=>{"label"=>"home", "identifier"=>"home", "app_layout"=>"application", "content"=>"<html>\r\n  <body>\r\n    <h1>{{ cms:page:header:string }}</h1>\r\n    {{ cms:page:content:rich_text }}\r\n  </body>\r\n</html>", "css"=>"", "js"=>""}, "commit"=>"Create Layout", "site_id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (0.2ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.3ms)[0m  [1mSELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."id" IS NULL  ORDER BY comfy_cms_layouts.position LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mComfy::Cms::Layout Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "comfy_cms_layouts" WHERE ("comfy_cms_layouts"."identifier" = 'home' AND "comfy_cms_layouts"."site_id" = 1) LIMIT 1[0m
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT MAX("comfy_cms_layouts"."position") FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND "comfy_cms_layouts"."parent_id" IS NULL[0m  [["site_id", 1]]
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "comfy_cms_layouts" ("label", "identifier", "app_layout", "content", "css", "js", "site_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)  [["label", "home"], ["identifier", "home"], ["app_layout", "application"], ["content", "<html>\r\n  <body>\r\n    <h1>{{ cms:page:header:string }}</h1>\r\n    {{ cms:page:content:rich_text }}\r\n  </body>\r\n</html>"], ["css", ""], ["js", ""], ["site_id", 1], ["created_at", "2015-01-02 07:27:46.367618"], ["updated_at", "2015-01-02 07:27:46.367618"]]
+  [1m[36m (28.2ms)[0m  [1mSELECT "comfy_cms_pages"."id" FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."layout_id" = ?  ORDER BY comfy_cms_pages.position[0m  [["layout_id", 1]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "comfy_cms_pages" SET "content_cache" = NULL WHERE "comfy_cms_pages"."id" IN (SELECT "comfy_cms_pages"."id" FROM "comfy_cms_pages" WHERE 1=0  ORDER BY comfy_cms_pages.position)
+  [1m[36mComfy::Cms::Layout Load (0.2ms)[0m  [1mSELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."parent_id" = ?  ORDER BY comfy_cms_layouts.position[0m  [["parent_id", 1]]
+  [1m[35m (17.8ms)[0m  commit transaction
+Redirected to http://localhost:3000/admin/sites/1/layouts/1/edit
+Completed 302 Found in 131ms (ActiveRecord: 48.3ms)
+
+
+Started GET "/admin/sites/1/layouts/1/edit" for ::1 at 2015-01-01 23:27:46 -0800
+Processing by Comfy::Admin::Cms::LayoutsController#edit as HTML
+  Parameters: {"site_id"=>"1", "id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComfy::Cms::Layout Load (0.2ms)[0m  SELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND "comfy_cms_layouts"."id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1  [["site_id", 1], ["id", 1]]
+  [1m[36m (0.8ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_revisions" WHERE "comfy_cms_revisions"."record_id" = ? AND "comfy_cms_revisions"."record_type" = ?[0m  [["record_id", 1], ["record_type", "Comfy::Cms::Layout"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (2.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layout_form_before.html.haml (0.1ms)
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layout_form_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/_form.html.haml (11.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/edit.html.haml within layouts/comfy/admin/cms (62.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (961.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (8.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (5.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (2.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (39.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 1079ms (Views: 1074.8ms | ActiveRecord: 1.4ms)
+
+
+Started GET "/admin/sites/1/pages" for ::1 at 2015-01-01 23:27:53 -0800
+Processing by Comfy::Admin::Cms::PagesController#index as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (24.5ms)[0m  SELECT COUNT(*) FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?  [["site_id", 1]]
+Redirected to http://localhost:3000/admin/sites/1/pages/new
+Completed 302 Found in 29ms (ActiveRecord: 24.6ms)
+
+
+Started GET "/admin/sites/1/pages/new" for ::1 at 2015-01-01 23:27:53 -0800
+Processing by Comfy::Admin::Cms::PagesController#new as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.2ms)[0m  SELECT COUNT(*) FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ?  [["site_id", 1]]
+  [1m[36mComfy::Cms::Page Load (0.3ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."id" IS NULL  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Page Load (0.7ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.3ms)[0m  [1mSELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1[0m  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_page_form_before.html.haml (2.1ms)
+  [1m[35m (0.1ms)[0m  SELECT COUNT(*) FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?  [["site_id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.1ms)[0m  [1mSELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."parent_id" = ?  ORDER BY comfy_cms_layouts.position  [["parent_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_page_form_inner.html.haml (1.9ms)
+  [1m[36mComfy::Cms::Category Load (0.8ms)[0m  [1mSELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC[0m  [["site_id", 1], ["categorized_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/categories/_form.html.haml (9.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/_form_blocks.html.haml (38.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_page_form_after.html.haml (2.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/_form.html.haml (79.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/new.html.haml within layouts/comfy/admin/cms (99.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (770.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (7.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (4.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (2.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (24.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 958ms (Views: 938.4ms | ActiveRecord: 2.8ms)
+
+
+Started GET "/assets/tinymce/themes/modern/theme.js" for ::1 at 2015-01-01 23:27:54 -0800
+
+
+Started GET "/assets/tinymce/plugins/link/plugin.js" for ::1 at 2015-01-01 23:27:55 -0800
+
+
+Started GET "/assets/tinymce/plugins/code/plugin.js" for ::1 at 2015-01-01 23:27:55 -0800
+
+
+Started GET "/assets/tinymce/plugins/autoresize/plugin.js" for ::1 at 2015-01-01 23:27:55 -0800
+
+
+Started GET "/assets/tinymce/plugins/image/plugin.js" for ::1 at 2015-01-01 23:27:55 -0800
+
+
+Started GET "/assets/tinymce/skins/lightgray/skin.min.css" for ::1 at 2015-01-01 23:27:55 -0800
+
+
+Started GET "/assets/tinymce/skins/lightgray/content.min.css" for ::1 at 2015-01-01 23:27:55 -0800
+
+
+Started GET "/assets/tinymce/skins/lightgray/fonts/tinymce.woff" for ::1 at 2015-01-01 23:27:56 -0800
+
+
+Started POST "/admin/sites/1/pages" for ::1 at 2015-01-01 23:28:17 -0800
+Processing by Comfy::Admin::Cms::PagesController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"PhH1AohZbi8rBawbld7czdlcQE2njVSTB/vSjnH5RdSAmxAlhQNkc9V5daqs8dOvJ+YncvsUEkTDpS2S2TWXUQ==", "page"=>{"label"=>"home", "layout_id"=>"1", "blocks_attributes"=>{"0"=>{"content"=>"", "identifier"=>"header"}, "1"=>{"content"=>"<p>Hello world</p>", "identifier"=>"content"}}, "is_published"=>"1"}, "preview"=>"Preview", "site_id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (0.3ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mComfy::Cms::Page Load (0.2ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."id" IS NULL  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Page Load (0.1ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.6ms)[0m  [1mSELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1[0m  [["id", 1]]
+  [1m[35mComfy::Cms::Site Load (0.2ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered inline template within layouts/application (0.5ms)
+Filter chain halted as :preview_cms_page rendered or redirected
+Completed 200 OK in 1610ms (Views: 1586.3ms | ActiveRecord: 1.4ms)
+
+
+Started GET "/assets/application-60ffb21653858fc518f14593b53bfa84.css?body=1" for ::1 at 2015-01-01 23:28:19 -0800
+
+
+Started GET "/assets/turbolinks-924184401b7d116eadaaefc96895fa84.js?body=1" for ::1 at 2015-01-01 23:28:19 -0800
+
+
+Started GET "/assets/application-a79125c5c452ab0b79768dbfbf263450.js?body=1" for ::1 at 2015-01-01 23:28:19 -0800
+
+
+Started POST "/admin/sites/1/pages" for ::1 at 2015-01-01 23:28:23 -0800
+Processing by Comfy::Admin::Cms::PagesController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"PhH1AohZbi8rBawbld7czdlcQE2njVSTB/vSjnH5RdSAmxAlhQNkc9V5daqs8dOvJ+YncvsUEkTDpS2S2TWXUQ==", "page"=>{"label"=>"home", "layout_id"=>"1", "blocks_attributes"=>{"0"=>{"content"=>"", "identifier"=>"header"}, "1"=>{"content"=>"<p>Hello world</p>", "identifier"=>"content"}}, "is_published"=>"1"}, "commit"=>"Create Page", "site_id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComfy::Cms::Page Load (0.2ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."id" IS NULL  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1]]
+  [1m[36mComfy::Cms::Page Load (0.1ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT COUNT(*) FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?  [["site_id", 1]]
+  [1m[36mComfy::Cms::Block Exists (15.8ms)[0m  [1mSELECT  1 AS one FROM "comfy_cms_blocks" WHERE ("comfy_cms_blocks"."identifier" = 'header' AND "comfy_cms_blocks"."blockable_type" = 'Comfy::Cms::Page' AND "comfy_cms_blocks"."blockable_id" IS NULL) LIMIT 1[0m
+  [1m[35mComfy::Cms::Block Exists (0.2ms)[0m  SELECT  1 AS one FROM "comfy_cms_blocks" WHERE ("comfy_cms_blocks"."identifier" = 'content' AND "comfy_cms_blocks"."blockable_type" = 'Comfy::Cms::Page' AND "comfy_cms_blocks"."blockable_id" IS NULL) LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?[0m  [["site_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT COUNT(*) FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?  [["site_id", 1]]
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "comfy_cms_pages" ("label", "layout_id", "site_id", "full_path", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["label", "home"], ["layout_id", 1], ["site_id", 1], ["full_path", "/"], ["created_at", "2015-01-02 07:28:23.791341"], ["updated_at", "2015-01-02 07:28:23.791341"]]
+  [1m[35mSQL (2.0ms)[0m  INSERT INTO "comfy_cms_blocks" ("identifier", "blockable_type", "content", "blockable_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)  [["identifier", "header"], ["blockable_type", "Comfy::Cms::Page"], ["content", ""], ["blockable_id", 1], ["created_at", "2015-01-02 07:28:23.793903"], ["updated_at", "2015-01-02 07:28:23.793903"]]
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "comfy_cms_blocks" ("identifier", "blockable_type", "content", "blockable_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["identifier", "content"], ["blockable_type", "Comfy::Cms::Page"], ["content", "<p>Hello world</p>"], ["blockable_id", 1], ["created_at", "2015-01-02 07:28:23.797686"], ["updated_at", "2015-01-02 07:28:23.797686"]]
+  [1m[35mComfy::Cms::Page Load (0.2ms)[0m  SELECT "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."parent_id" = ?  ORDER BY comfy_cms_pages.position  [["parent_id", 1]]
+  [1m[36m (3.2ms)[0m  [1mcommit transaction[0m
+Redirected to http://localhost:3000/admin/sites/1/pages/1/edit
+Completed 302 Found in 63ms (ActiveRecord: 22.7ms)
+
+
+Started GET "/admin/sites/1/pages/1/edit" for ::1 at 2015-01-01 23:28:23 -0800
+Processing by Comfy::Admin::Cms::PagesController#edit as HTML
+  Parameters: {"site_id"=>"1", "id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ?[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Page Load (0.3ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."id" = ?  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1], ["id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.1ms)[0m  [1mSELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT COUNT(*) FROM "comfy_cms_revisions" WHERE "comfy_cms_revisions"."record_id" = ? AND "comfy_cms_revisions"."record_type" = ?  [["record_id", 1], ["record_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_page_form_before.html.haml (0.1ms)
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Page Load (0.1ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.1ms)[0m  [1mSELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."parent_id" = ?  ORDER BY comfy_cms_layouts.position  [["parent_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_page_form_inner.html.haml (0.1ms)
+  [1m[36mComfy::Cms::Category Load (0.1ms)[0m  [1mSELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC[0m  [["site_id", 1], ["categorized_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/categories/_form.html.haml (1.6ms)
+  [1m[35mComfy::Cms::Block Load (0.2ms)[0m  SELECT "comfy_cms_blocks".* FROM "comfy_cms_blocks" WHERE "comfy_cms_blocks"."blockable_id" = ? AND "comfy_cms_blocks"."blockable_type" = ?  [["blockable_id", 1], ["blockable_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/_form_blocks.html.haml (8.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_page_form_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/_form.html.haml (35.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/edit.html.haml within layouts/comfy/admin/cms (57.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (791.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (10.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (5.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (2.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (31.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 936ms (Views: 925.2ms | ActiveRecord: 1.8ms)
+
+
+Started GET "/admin/sites/1/snippets" for ::1 at 2015-01-01 23:28:27 -0800
+Processing by Comfy::Admin::Cms::SnippetsController#index as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.4ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (21.7ms)[0m  SELECT COUNT(*) FROM "comfy_cms_snippets" WHERE "comfy_cms_snippets"."site_id" = ?  [["site_id", 1]]
+Redirected to http://localhost:3000/admin/sites/1/snippets/new
+Completed 302 Found in 36ms (ActiveRecord: 22.3ms)
+
+
+Started GET "/admin/sites/1/snippets/new" for ::1 at 2015-01-01 23:28:28 -0800
+Processing by Comfy::Admin::Cms::SnippetsController#new as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_snippet_form_before.html.haml (2.5ms)
+  [1m[35mComfy::Cms::Category Load (0.1ms)[0m  SELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC  [["site_id", 1], ["categorized_type", "Comfy::Cms::Snippet"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/categories/_form.html.haml (1.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_snippet_form_after.html.haml (2.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/snippets/_form.html.haml (19.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/snippets/new.html.haml within layouts/comfy/admin/cms (26.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (785.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (5.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (2.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (1.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (18.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 852ms (Views: 841.9ms | ActiveRecord: 0.3ms)
+
+
+Started GET "/admin/sites/1/files" for ::1 at 2015-01-01 23:28:32 -0800
+Processing by Comfy::Admin::Cms::FilesController#index as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (2.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_files_before.html.haml (1.7ms)
+  [1m[35mComfy::Cms::Category Load (0.2ms)[0m  SELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC  [["site_id", 1], ["categorized_type", "Comfy::Cms::File"]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC[0m  [["site_id", 1], ["categorized_type", "Comfy::Cms::File"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/categories/_index.html.haml (305.9ms)
+  [1m[35m (27.4ms)[0m  SELECT COUNT(*) FROM "comfy_cms_files" WHERE "comfy_cms_files"."site_id" = ? AND "comfy_cms_files"."block_id" IS NULL  [["site_id", 1]]
+  [1m[36mComfy::Cms::File Load (1.0ms)[0m  [1mSELECT  "comfy_cms_files".* FROM "comfy_cms_files" WHERE "comfy_cms_files"."site_id" = ? AND "comfy_cms_files"."block_id" IS NULL  ORDER BY comfy_cms_files.position LIMIT 50 OFFSET 0[0m  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_file.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_files_after.html.haml (1.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/index.html.haml within layouts/comfy/admin/cms (489.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (778.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (5.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (4.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (1.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (21.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 1312ms (Views: 1272.9ms | ActiveRecord: 28.9ms)
+
+
+Started GET "/admin/sites/1/layouts" for ::1 at 2015-01-01 23:28:38 -0800
+Processing by Comfy::Admin::Cms::LayoutsController#index as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ?[0m  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layouts_before.html.haml (2.4ms)
+  [1m[35mComfy::Cms::Layout Load (0.2ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position  [["site_id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.3ms)[0m  [1mSELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position[0m
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."parent_id" = ?  ORDER BY comfy_cms_layouts.position  [["parent_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/_index_branch.html.haml (7.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layouts_after.html.haml (3.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/index.html.haml within layouts/comfy/admin/cms (69.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (769.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (5.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (4.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (1.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (22.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 903ms (Views: 898.7ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/assets/comfortable_mexican_sofa/icon_layout-d438fae4e12bdeabb5285bfd0859ab6d.gif" for ::1 at 2015-01-01 23:28:39 -0800
+
+
+Started GET "/admin/sites" for ::1 at 2015-01-01 23:28:47 -0800
+Processing by Comfy::Admin::Cms::SitesController#index as HTML
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_sites"[0m
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_sites_before.html.haml (2.0ms)
+  [1m[36mComfy::Cms::Site Load (0.2ms)[0m  [1mSELECT "comfy_cms_sites".* FROM "comfy_cms_sites"[0m
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_sites_after.html.haml (1.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/index.html.haml within layouts/comfy/admin/cms (66.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (767.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (5.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (3.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (2.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (19.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.5ms)
+Completed 200 OK in 951ms (Views: 948.4ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/assets/comfortable_mexican_sofa/icon_site-61ff884713bc7184054ccbab78a4c36e.gif" for ::1 at 2015-01-01 23:28:48 -0800
+
+
+Started GET "/admin/sites/1/pages" for ::1 at 2015-01-01 23:28:56 -0800
+Processing by Comfy::Admin::Cms::PagesController#index as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Page Load (0.2ms)[0m  SELECT "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?  ORDER BY comfy_cms_pages.position  [["site_id", 1]]
+  [1m[36mComfy::Cms::Categorization Load (0.9ms)[0m  [1mSELECT "comfy_cms_categorizations".* FROM "comfy_cms_categorizations" WHERE "comfy_cms_categorizations"."categorized_type" = 'Comfy::Cms::Page' AND "comfy_cms_categorizations"."categorized_id" IN (1)[0m
+  [1m[35mComfy::Cms::Page Load (0.1ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_pages_before.html.haml (2.1ms)
+  [1m[36mComfy::Cms::Category Load (0.1ms)[0m  [1mSELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC[0m  [["site_id", 1], ["categorized_type", "Comfy::Cms::Page"]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC  [["site_id", 1], ["categorized_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/categories/_index.html.haml (3.6ms)
+  [1m[36mComfy::Cms::Category Load (0.2ms)[0m  [1mSELECT "comfy_cms_categories".* FROM "comfy_cms_categories" INNER JOIN "comfy_cms_categorizations" ON "comfy_cms_categories"."id" = "comfy_cms_categorizations"."category_id" WHERE "comfy_cms_categorizations"."categorized_id" = ? AND "comfy_cms_categorizations"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC[0m  [["categorized_id", 1], ["categorized_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/categories/_categories.html.haml (6.9ms)
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/_index_branch.html.haml (18.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_pages_after.html.haml (1.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/index.html.haml within layouts/comfy/admin/cms (40.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (784.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (8.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (4.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (2.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (28.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.4ms)
+Completed 200 OK in 1015ms (Views: 863.4ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/assets/comfortable_mexican_sofa/icon_page-61ff884713bc7184054ccbab78a4c36e.gif" for ::1 at 2015-01-01 23:28:57 -0800
+
+
+Started GET "/admin/sites/1/pages/1/edit" for ::1 at 2015-01-01 23:29:00 -0800
+Processing by Comfy::Admin::Cms::PagesController#edit as HTML
+  Parameters: {"site_id"=>"1", "id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT COUNT(*) FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ?  [["site_id", 1]]
+  [1m[36mComfy::Cms::Page Load (0.1ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."id" = ?  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1], ["id", 1]]
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1  [["id", 1]]
+  [1m[36m (0.2ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_revisions" WHERE "comfy_cms_revisions"."record_id" = ? AND "comfy_cms_revisions"."record_type" = ?[0m  [["record_id", 1], ["record_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_page_form_before.html.haml (0.1ms)
+  [1m[35m (0.1ms)[0m  SELECT COUNT(*) FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?  [["site_id", 1]]
+  [1m[36mComfy::Cms::Page Load (0.1ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position  [["site_id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.1ms)[0m  [1mSELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."parent_id" = ?  ORDER BY comfy_cms_layouts.position[0m  [["parent_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_page_form_inner.html.haml (0.1ms)
+  [1m[35mComfy::Cms::Category Load (0.1ms)[0m  SELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC  [["site_id", 1], ["categorized_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/categories/_form.html.haml (1.7ms)
+  [1m[36mComfy::Cms::Block Load (0.1ms)[0m  [1mSELECT "comfy_cms_blocks".* FROM "comfy_cms_blocks" WHERE "comfy_cms_blocks"."blockable_id" = ? AND "comfy_cms_blocks"."blockable_type" = ?[0m  [["blockable_id", 1], ["blockable_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/_form_blocks.html.haml (6.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_page_form_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/_form.html.haml (36.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/edit.html.haml within layouts/comfy/admin/cms (79.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (781.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (5.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (3.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (1.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (19.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 933ms (Views: 925.5ms | ActiveRecord: 1.3ms)
+
+
+Started GET "/admin/sites/1/pages" for ::1 at 2015-01-01 23:29:06 -0800
+Processing by Comfy::Admin::Cms::PagesController#index as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?[0m  [["site_id", 1]]
+  [1m[35mComfy::Cms::Page Load (0.1ms)[0m  SELECT "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ?  ORDER BY comfy_cms_pages.position  [["site_id", 1]]
+  [1m[36mComfy::Cms::Categorization Load (0.2ms)[0m  [1mSELECT "comfy_cms_categorizations".* FROM "comfy_cms_categorizations" WHERE "comfy_cms_categorizations"."categorized_type" = 'Comfy::Cms::Page' AND "comfy_cms_categorizations"."categorized_id" IN (1)[0m
+  [1m[35mComfy::Cms::Page Load (0.1ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_pages_before.html.haml (0.1ms)
+  [1m[36mComfy::Cms::Category Load (0.1ms)[0m  [1mSELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC[0m  [["site_id", 1], ["categorized_type", "Comfy::Cms::Page"]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "comfy_cms_categories".* FROM "comfy_cms_categories" WHERE "comfy_cms_categories"."site_id" = ? AND "comfy_cms_categories"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC  [["site_id", 1], ["categorized_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/categories/_index.html.haml (3.9ms)
+  [1m[36mComfy::Cms::Category Load (0.1ms)[0m  [1mSELECT "comfy_cms_categories".* FROM "comfy_cms_categories" INNER JOIN "comfy_cms_categorizations" ON "comfy_cms_categories"."id" = "comfy_cms_categorizations"."category_id" WHERE "comfy_cms_categorizations"."categorized_id" = ? AND "comfy_cms_categorizations"."categorized_type" = ?  ORDER BY "comfy_cms_categories"."label" ASC[0m  [["categorized_id", 1], ["categorized_type", "Comfy::Cms::Page"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/categories/_categories.html.haml (1.9ms)
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/_index_branch.html.haml (6.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_pages_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/pages/index.html.haml within layouts/comfy/admin/cms (34.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (770.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (6.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (3.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (1.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (19.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 865ms (Views: 857.2ms | ActiveRecord: 0.9ms)
+
+
+Started GET "/admin/sites/1/edit" for ::1 at 2015-01-01 23:29:15 -0800
+Processing by Comfy::Admin::Cms::SitesController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1[0m  [["id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_site_form_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_site_form_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_form.html.haml (12.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/edit.html.haml within layouts/comfy/admin/cms (23.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (773.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (5.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (3.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (1.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (18.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 851ms (Views: 848.9ms | ActiveRecord: 0.1ms)
+
+
+Started PATCH "/admin/sites/1" for ::1 at 2015-01-01 23:29:25 -0800
+Processing by Comfy::Admin::Cms::SitesController#update as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"IFZn7nW1LJHpyVN4fEHRewcQTDxwmxi/AuAEDLgXeyKe3ILJeO8mzRe1islFbt4Z+aorAywCXmjGvvsQENuppw==", "site"=>{"label"=>"gocodeme", "identifier"=>"gocodeme", "hostname"=>"localhost:3000", "path"=>"", "locale"=>"en", "is_mirrored"=>"0"}, "commit"=>"Update Site", "id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mComfy::Cms::Site Exists (0.3ms)[0m  SELECT  1 AS one FROM "comfy_cms_sites" WHERE ("comfy_cms_sites"."identifier" = 'gocodeme' AND "comfy_cms_sites"."id" != 1) LIMIT 1
+  [1m[36mComfy::Cms::Site Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "comfy_cms_sites" WHERE ("comfy_cms_sites"."hostname" = 'localhost:3000' AND "comfy_cms_sites"."id" != 1 AND "comfy_cms_sites"."path" = '') LIMIT 1[0m
+  [1m[35mSQL (0.7ms)[0m  UPDATE "comfy_cms_sites" SET "hostname" = ? WHERE "comfy_cms_sites"."id" = ?  [["hostname", "localhost:3000"], ["id", 1]]
+  [1m[36m (23.8ms)[0m  [1mcommit transaction[0m
+Redirected to http://localhost:3000/admin/sites/1/edit
+Completed 302 Found in 37ms (ActiveRecord: 25.1ms)
+
+
+Started GET "/admin/sites/1/edit" for ::1 at 2015-01-01 23:29:25 -0800
+Processing by Comfy::Admin::Cms::SitesController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_site_form_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_site_form_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_form.html.haml (9.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/edit.html.haml within layouts/comfy/admin/cms (11.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (758.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (6.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (3.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (1.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (20.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.2ms)
+Completed 200 OK in 800ms (Views: 798.9ms | ActiveRecord: 0.1ms)
+
+
+Started GET "/" for ::1 at 2015-01-01 23:29:33 -0800
+Processing by Comfy::Cms::ContentController#show as HTML
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_sites"[0m
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites"  ORDER BY "comfy_cms_sites"."id" ASC LIMIT 1
+  [1m[36mComfy::Cms::Page Load (0.3ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."is_published" = 't' AND "comfy_cms_pages"."full_path" = ?  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1], ["full_path", "/"]]
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1  [["id", 1]]
+  [1m[36mComfy::Cms::Block Load (0.1ms)[0m  [1mSELECT "comfy_cms_blocks".* FROM "comfy_cms_blocks" WHERE "comfy_cms_blocks"."blockable_id" = ? AND "comfy_cms_blocks"."blockable_type" = ?[0m  [["blockable_id", 1], ["blockable_type", "Comfy::Cms::Page"]]
+  [1m[35mSQL (5.0ms)[0m  UPDATE "comfy_cms_pages" SET "content_cache" = '<html>
+  <body>
+    <h1></h1>
+    <p>Hello world</p>
+  </body>
+</html>' WHERE "comfy_cms_pages"."id" = ?  [["id", 1]]
+  [1m[36mComfy::Cms::Block Load (0.2ms)[0m  [1mSELECT  "comfy_cms_blocks".* FROM "comfy_cms_blocks" WHERE "comfy_cms_blocks"."blockable_id" = ? AND "comfy_cms_blocks"."blockable_type" = ? AND "comfy_cms_blocks"."identifier" = 'mime_type' LIMIT 1[0m  [["blockable_id", 1], ["blockable_type", "Comfy::Cms::Page"]]
+  Rendered inline template within layouts/application (0.6ms)
+Completed 200 OK in 150ms (Views: 131.2ms | ActiveRecord: 6.0ms)
+
+
+Started GET "/admin/sites/1/layouts" for ::1 at 2015-01-01 23:38:01 -0800
+Processing by Comfy::Admin::Cms::LayoutsController#index as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (1.5ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.3ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ?[0m  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (0.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layouts_before.html.haml (0.2ms)
+  [1m[35mComfy::Cms::Layout Load (0.2ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position  [["site_id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.5ms)[0m  [1mSELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position[0m
+  [1m[35mComfy::Cms::Layout Load (0.2ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."parent_id" = ?  ORDER BY comfy_cms_layouts.position  [["parent_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/_index_branch.html.haml (7.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layouts_after.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/index.html.haml within layouts/comfy/admin/cms (33.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (2.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (1316.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (9.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (6.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (3.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (35.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.3ms)
+Completed 200 OK in 1477ms (Views: 1429.4ms | ActiveRecord: 2.7ms)
+
+
+Started GET "/" for ::1 at 2015-01-01 23:38:10 -0800
+Processing by Comfy::Cms::ContentController#show as HTML
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_sites"[0m
+  [1m[35mComfy::Cms::Site Load (0.2ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites"  ORDER BY "comfy_cms_sites"."id" ASC LIMIT 1
+  [1m[36mComfy::Cms::Page Load (0.2ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."is_published" = 't' AND "comfy_cms_pages"."full_path" = ?  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1], ["full_path", "/"]]
+  [1m[35mComfy::Cms::Layout Load (0.2ms)[0m  SELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1  [["id", 1]]
+  [1m[36mComfy::Cms::Block Load (0.1ms)[0m  [1mSELECT  "comfy_cms_blocks".* FROM "comfy_cms_blocks" WHERE "comfy_cms_blocks"."blockable_id" = ? AND "comfy_cms_blocks"."blockable_type" = ? AND "comfy_cms_blocks"."identifier" = 'mime_type' LIMIT 1[0m  [["blockable_id", 1], ["blockable_type", "Comfy::Cms::Page"]]
+  Rendered inline template within layouts/application (1.0ms)
+Completed 200 OK in 147ms (Views: 138.8ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/admin/sites/1/layouts/1/edit" for ::1 at 2015-01-01 23:40:02 -0800
+Processing by Comfy::Admin::Cms::LayoutsController#edit as HTML
+  Parameters: {"site_id"=>"1", "id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (3.5ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.6ms)[0m  [1mSELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND "comfy_cms_layouts"."id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1[0m  [["site_id", 1], ["id", 1]]
+  [1m[35m (0.3ms)[0m  SELECT COUNT(*) FROM "comfy_cms_revisions" WHERE "comfy_cms_revisions"."record_id" = ? AND "comfy_cms_revisions"."record_type" = ?  [["record_id", 1], ["record_type", "Comfy::Cms::Layout"]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (0.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layout_form_before.html.haml (0.2ms)
+  [1m[36mComfy::Cms::Layout Load (0.2ms)[0m  [1mSELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position[0m  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layout_form_after.html.haml (0.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/_form.html.haml (43.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/edit.html.haml within layouts/comfy/admin/cms (84.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (1381.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (8.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (4.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (2.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (40.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.5ms)
+Completed 200 OK in 1611ms (Views: 1575.1ms | ActiveRecord: 4.7ms)
+
+
+Started GET "/admin/sites/1/layouts" for ::1 at 2015-01-01 23:40:23 -0800
+Processing by Comfy::Admin::Cms::LayoutsController#index as HTML
+  Parameters: {"site_id"=>"1"}
+  [1m[35mComfy::Cms::Site Load (0.1ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites" WHERE "comfy_cms_sites"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ?[0m  [["site_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/sites/_mirrors.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layouts_before.html.haml (0.1ms)
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."site_id" = ? AND (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position  [["site_id", 1]]
+  [1m[36mComfy::Cms::Layout Load (0.3ms)[0m  [1mSELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE (parent_id IS NULL)  ORDER BY comfy_cms_layouts.position[0m
+  [1m[35mComfy::Cms::Layout Load (0.1ms)[0m  SELECT "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."parent_id" = ?  ORDER BY comfy_cms_layouts.position  [["parent_id", 1]]
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/_index_branch.html.haml (3.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_layouts_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/layouts/index.html.haml within layouts/comfy/admin/cms (83.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_head.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_head.html.haml (804.7ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_body_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_inner.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_navigation_after.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_left.html.haml (8.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_before.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_right_column_after.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_right.html.haml (5.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_flash.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer.html.haml (0.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/partials/_html_footer.html.haml (0.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_footer_js.html.haml (4.3ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/layouts/comfy/admin/cms/_body.html.haml (36.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/comfortable_mexican_sofa-1.12.3/app/views/comfy/admin/cms/files/_modal.html.haml (0.7ms)
+Completed 200 OK in 1079ms (Views: 1075.2ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/" for ::1 at 2015-01-02 00:06:41 -0800
+Processing by Comfy::Cms::ContentController#show as HTML
+  [1m[36m (60.0ms)[0m  [1mSELECT COUNT(*) FROM "comfy_cms_sites"[0m
+  [1m[35mComfy::Cms::Site Load (0.3ms)[0m  SELECT  "comfy_cms_sites".* FROM "comfy_cms_sites"  ORDER BY "comfy_cms_sites"."id" ASC LIMIT 1
+  [1m[36mComfy::Cms::Page Load (0.6ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."is_published" = 't' AND "comfy_cms_pages"."full_path" = ?  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1], ["full_path", "/"]]
+  [1m[35mComfy::Cms::Layout Load (0.6ms)[0m  SELECT  "comfy_cms_layouts".* FROM "comfy_cms_layouts" WHERE "comfy_cms_layouts"."id" = ?  ORDER BY comfy_cms_layouts.position LIMIT 1  [["id", 1]]
+  [1m[36mComfy::Cms::Block Load (0.3ms)[0m  [1mSELECT  "comfy_cms_blocks".* FROM "comfy_cms_blocks" WHERE "comfy_cms_blocks"."blockable_id" = ? AND "comfy_cms_blocks"."blockable_type" = ? AND "comfy_cms_blocks"."identifier" = 'mime_type' LIMIT 1[0m  [["blockable_id", 1], ["blockable_type", "Comfy::Cms::Page"]]
+  Rendered inline template within layouts/application (95.7ms)
+Completed 200 OK in 4358ms (Views: 4008.7ms | ActiveRecord: 61.9ms)
+
+
+Started GET "/assets/application-89b63d1c83002e8d670b544a1f886c01.css?body=1" for ::1 at 2015-01-02 00:06:49 -0800
+
+
+Started GET "/assets/application-2c5a956ff43f8a2027ceab82ce8a653f.js?body=1" for ::1 at 2015-01-02 00:06:49 -0800
+
+
+Started GET "/js/bootstrap.min.js" for ::1 at 2015-01-02 00:06:49 -0800
+Processing by Comfy::Cms::ContentController#show as JS
+  Parameters: {"cms_path"=>"js/bootstrap.min"}
+  [1m[35m (106.3ms)[0m  SELECT COUNT(*) FROM "comfy_cms_sites"
+  [1m[36mComfy::Cms::Site Load (0.1ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites"  ORDER BY "comfy_cms_sites"."id" ASC LIMIT 1[0m
+  [1m[35mComfy::Cms::Page Load (0.2ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."is_published" = 't' AND "comfy_cms_pages"."full_path" = ?  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1], ["full_path", "/js/bootstrap.min"]]
+  [1m[36mComfy::Cms::Page Load (0.1ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."is_published" = 't' AND "comfy_cms_pages"."full_path" = ?  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1], ["full_path", "/404"]]
+Completed 404 Not Found in 113ms
+
+ActionController::RoutingError (Page Not Found at: "js/bootstrap.min"):
+  comfortable_mexican_sofa (1.12.3) app/controllers/comfy/cms/content_controller.rb:64:in `rescue in page_not_found'
+  comfortable_mexican_sofa (1.12.3) app/controllers/comfy/cms/content_controller.rb:58:in `page_not_found'
+  activesupport (4.2.0) lib/active_support/rescuable.rb:80:in `call'
+  activesupport (4.2.0) lib/active_support/rescuable.rb:80:in `rescue_with_handler'
+  actionpack (4.2.0) lib/action_controller/metal/rescue.rb:15:in `rescue_with_handler'
+  actionpack (4.2.0) lib/action_controller/metal/rescue.rb:32:in `rescue in process_action'
+  actionpack (4.2.0) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:31:in `block in process_action'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.0) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.0) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.0) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.0) lib/action_view/rendering.rb:30:in `process'
+  actionpack (4.2.0) lib/action_controller/metal.rb:195:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal.rb:236:in `block in action'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `dispatch'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:42:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `each'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:802:in `call'
+  rack (1.6.0) lib/rack/etag.rb:24:in `call'
+  rack (1.6.0) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.0) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:647:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_trace.html.erb (30.4ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/routes/_route.html.erb (3.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/routes/_table.html.erb (2.0ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_request_and_response.html.erb (1.2ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_web_console.html.erb (1.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/routing_error.html.erb within rescues/layout (170.6ms)
+
+
+Started GET "/js/jquery.js" for ::1 at 2015-01-02 00:06:52 -0800
+Processing by Comfy::Cms::ContentController#show as JS
+  Parameters: {"cms_path"=>"js/jquery"}
+  [1m[35m (0.2ms)[0m  SELECT COUNT(*) FROM "comfy_cms_sites"
+  [1m[36mComfy::Cms::Site Load (0.2ms)[0m  [1mSELECT  "comfy_cms_sites".* FROM "comfy_cms_sites"  ORDER BY "comfy_cms_sites"."id" ASC LIMIT 1[0m
+  [1m[35mComfy::Cms::Page Load (0.2ms)[0m  SELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."is_published" = 't' AND "comfy_cms_pages"."full_path" = ?  ORDER BY comfy_cms_pages.position LIMIT 1  [["site_id", 1], ["full_path", "/js/jquery"]]
+  [1m[36mComfy::Cms::Page Load (0.2ms)[0m  [1mSELECT  "comfy_cms_pages".* FROM "comfy_cms_pages" WHERE "comfy_cms_pages"."site_id" = ? AND "comfy_cms_pages"."is_published" = 't' AND "comfy_cms_pages"."full_path" = ?  ORDER BY comfy_cms_pages.position LIMIT 1[0m  [["site_id", 1], ["full_path", "/404"]]
+Completed 404 Not Found in 7ms
+
+ActionController::RoutingError (Page Not Found at: "js/jquery"):
+  comfortable_mexican_sofa (1.12.3) app/controllers/comfy/cms/content_controller.rb:64:in `rescue in page_not_found'
+  comfortable_mexican_sofa (1.12.3) app/controllers/comfy/cms/content_controller.rb:58:in `page_not_found'
+  activesupport (4.2.0) lib/active_support/rescuable.rb:80:in `call'
+  activesupport (4.2.0) lib/active_support/rescuable.rb:80:in `rescue_with_handler'
+  actionpack (4.2.0) lib/action_controller/metal/rescue.rb:15:in `rescue_with_handler'
+  actionpack (4.2.0) lib/action_controller/metal/rescue.rb:32:in `rescue in process_action'
+  actionpack (4.2.0) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:31:in `block in process_action'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.0) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.0) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.0) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.0) lib/action_view/rendering.rb:30:in `process'
+  actionpack (4.2.0) lib/action_controller/metal.rb:195:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal.rb:236:in `block in action'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `dispatch'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:42:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `each'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:802:in `call'
+  rack (1.6.0) lib/rack/etag.rb:24:in `call'
+  rack (1.6.0) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.0) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:647:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /Users/konstantin/.rvm/rubies/ruby-2.1.5/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_trace.html.erb (2.6ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/routes/_route.html.erb (3.8ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/routes/_table.html.erb (1.5ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_request_and_response.html.erb (0.9ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/_web_console.html.erb (1.1ms)
+  Rendered /Users/konstantin/.rvm/gems/ruby-2.1.5/gems/web-console-2.0.0/lib/action_dispatch/templates/rescues/routing_error.html.erb within rescues/layout (68.6ms)
